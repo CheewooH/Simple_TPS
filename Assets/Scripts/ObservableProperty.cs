@@ -8,7 +8,6 @@ namespace DesignPattern
     public class ObservableProperty<T>
     {
         [SerializeField] private T _value;
-
         public T Value
         {
             get => _value;
@@ -26,24 +25,24 @@ namespace DesignPattern
             _value = value;
         }
 
-        public void Suvbscribe(UnityAction<T> action)
+        public void Subscribe(UnityAction<T> action)
         {
             _onValueChanged.AddListener(action);
         }
 
-        public void UnSuvbscribe(UnityAction<T> action)
+        public void Unsubscribe(UnityAction<T> action)
         {
             _onValueChanged.RemoveListener(action);
         }
 
-        public void UnsuvbscribeAll()
+        public void UnsbscribeAll()
         {
             _onValueChanged.RemoveAllListeners();
         }
 
-        public void Notify()
+        private void Notify()
         {
-            _onValueChanged?.Invoke(_value);
+            _onValueChanged?.Invoke(Value);
         }
     }
 }

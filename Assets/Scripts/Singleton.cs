@@ -19,7 +19,8 @@ namespace DesignPattern
                 return _instance;
             }
         }
-        protected void SingletonInIt()
+
+        protected void SingletonInit()
         {
             if (_instance != null && _instance != this)
             {
