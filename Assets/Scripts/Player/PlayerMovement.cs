@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
@@ -87,14 +86,14 @@ public class PlayerMovement : MonoBehaviour
 
         return new Vector2(mouseX, mouseY);
     }
-
+    
     // 벡터 그림 (수업 후)
     public Vector3 GetMoveDirection()
     {
         Vector3 input = GetInputDirection();
 
         Vector3 direction =
-           (transform.right * input.x) +
+           (transform.right * input.x) + 
            (transform.forward * input.z);
 
         return direction.normalized;
@@ -108,3 +107,21 @@ public class PlayerMovement : MonoBehaviour
         return new Vector3(x, 0, z);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

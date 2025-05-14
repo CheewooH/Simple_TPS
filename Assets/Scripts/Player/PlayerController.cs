@@ -1,5 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,8 +10,7 @@ public class PlayerController : MonoBehaviour
     private PlayerStatus _status;
     private PlayerMovement _movement;
 
-    [SerializeField] private GameObject _aimCamera;
-    private GameObject _mainCamera;
+    [SerializeField] private CinemachineVirtualCamera _aimCamera;
 
     [SerializeField] private KeyCode _aimKey = KeyCode.Mouse1;
 
@@ -25,12 +26,12 @@ public class PlayerController : MonoBehaviour
     {
         _status = GetComponent<PlayerStatus>();
         _movement = GetComponent<PlayerMovement>();
-        _mainCamera = Camera.main.gameObject;
+        // _mainCamera = Camera.main.gameObject;
     }
 
     private void HandlePlayerControl()
     {
-        if (!IsControlActivate) return;
+        if (!IsControlActivate) return; 
 
         HandleMovement();
         HandleAiming();
@@ -38,7 +39,20 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        // TODO: Movement 병합시 기능 추가예정
+        Vector3 camRotateDir = _movement.SetAimRotation();
+
+        float moveSpeed;
+        if (_status.IsAiming.Value) moveSpeed = _status.WalkSpeed;
+        else moveSpeed = _status.RunSpeed;
+
+        Vector3 moveDir = _movement.SetMove(moveSpeed);
+        _status.IsMoving.Value = (moveDir != Vector3.zero);
+
+        Vector3 avatarDir;
+        if (_status.IsAiming.Value) avatarDir = camRotateDir;
+        else avatarDir = moveDir;
+
+        _movement.SetAvatarRotation(avatarDir);
     }
 
     private void HandleAiming()
@@ -48,21 +62,25 @@ public class PlayerController : MonoBehaviour
 
     public void SubscribeEvents()
     {
-        _status.IsAiming.Subscribe(value => SetActivateAimCamera(value));
-
-        // 람다식 아닌 버전으로 추가
+        _status.IsAiming.Subscribe(_aimCamera.gameObject.SetActive);
     }
 
     public void UnsubscribeEvents()
     {
-        _status.IsAiming.Unsubscribe(value => SetActivateAimCamera(value));
-    }
-
-    private void SetActivateAimCamera(bool value)
-    {
-        _aimCamera.SetActive(value);
-        _mainCamera.SetActive(!value);
+        _status.IsAiming.Unsubscribe(_aimCamera.gameObject.SetActive);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
