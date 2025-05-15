@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     private PlayerStatus _status;
     private PlayerMovement _movement;
+    private Animator _animator;
 
     [SerializeField] private CinemachineVirtualCamera _aimCamera;
 
@@ -26,7 +28,7 @@ public class PlayerController : MonoBehaviour
     {
         _status = GetComponent<PlayerStatus>();
         _movement = GetComponent<PlayerMovement>();
-        // _mainCamera = Camera.main.gameObject;
+        _animator = GetComponent<Animator>();
     }
 
     private void HandlePlayerControl()
@@ -53,6 +55,13 @@ public class PlayerController : MonoBehaviour
         else avatarDir = moveDir;
 
         _movement.SetAvatarRotation(avatarDir);
+
+        if (_status.IsAiming.Value)
+        {
+            Vector3 input = _movement.GetMoveDirection();
+            _animator.SetFloat("X", input.x);
+            _animator.SetFloat("Z", input.z);
+        }
     }
 
     private void HandleAiming()
@@ -62,13 +71,20 @@ public class PlayerController : MonoBehaviour
 
     public void SubscribeEvents()
     {
+        _status.IsMoving.Subscribe(SetMoveAnimation);
         _status.IsAiming.Subscribe(_aimCamera.gameObject.SetActive);
+        _status.IsAiming.Subscribe(SetAimAnimation);
     }
 
     public void UnsubscribeEvents()
     {
+        _status.IsMoving.Unsubscribe(SetMoveAnimation);
         _status.IsAiming.Unsubscribe(_aimCamera.gameObject.SetActive);
+        _status.IsAiming.Unsubscribe(SetAimAnimation);
     }
+
+    private void SetAimAnimation(bool value) => _animator.SetBool("IsAim", value);
+    private void SetMoveAnimation(bool value) => _animator.SetBool("IsMove", value);
 }
 
 
