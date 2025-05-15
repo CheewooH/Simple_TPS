@@ -36,11 +36,11 @@ public class Gun : MonoBehaviour
         PlayShootEffect();
         _currentCount = _shootDelay;
 
-        // TODO : Ray ¹ß»ç -> ¹İÈ¯¹ŞÀº ´ë»ó¿¡°Ô µ¥¹ÌÁö ºÎ¿©. ¸ó½ºÅÍ ±¸Çö½Ã °°ÀÌ ±¸Çö
+        // TODO : Ray ë°œì‚¬ -> ë°˜í™˜ë°›ì€ ëŒ€ìƒì—ê²Œ ë°ë¯¸ì§€ ë¶€ì—¬. ëª¬ìŠ¤í„° êµ¬í˜„ì‹œ ê°™ì´ êµ¬í˜„
         GameObject target = RayShoot();
         if (target == null) return true;
 
-        Debug.Log($"ÃÑ¿¡ ¸ÂÀ½ : {target.name}");
+        Debug.Log($"ì´ì— ë§ìŒ : {target.name}");
         //-------
 
         return true;
@@ -60,7 +60,7 @@ public class Gun : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, _attackRange, _targetLayer))
         {
-            // TODO: ¸ó½ºÅÍ¸¦ ¾î¶»°Ô ±¸ÇöÇÏ´Â°¡¿¡ µû¶ó ´Ù¸§.
+            // TODO: ëª¬ìŠ¤í„°ë¥¼ ì–´ë–»ê²Œ êµ¬í˜„í•˜ëŠ”ê°€ì— ë”°ë¼ ë‹¤ë¦„.
             return hit.transform.gameObject;
             //-----------------
         }
@@ -81,6 +81,6 @@ public class Gun : MonoBehaviour
 
     private void PlayShootEffect()
     {
-        // TODO: ÃÑ±¸ È­¿° È¿°ú. ÆÄÆ¼Å¬·Î ±¸ÇöÇØº¸±â±â
+        // TODO: ì´êµ¬ í™”ì—¼ íš¨ê³¼. íŒŒí‹°í´ë¡œ êµ¬í˜„í•´ë³´ê¸°ê¸°
     }
 }

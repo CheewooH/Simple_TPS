@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DesignPattern;
 using UnityEngine;
 
-
 public class AudioManager : MonoBehaviour
 {
     private AudioSource _bgmSource;
@@ -31,9 +30,10 @@ public class AudioManager : MonoBehaviour
             _bgmSource.Play();
         }
     }
+
     public SFXController GetSFX()
     {
-        // Ç®¿¡¼­ ²¨³»¿Í¼­ ¹İÈ¯
+        // í’€ì—ì„œ êº¼ë‚´ì™€ì„œ ë°˜í™˜
         PooledObject po = _sfxPool.PopPool();
         return po as SFXController;
     }

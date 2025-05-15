@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,15 +17,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private KeyCode _aimKey = KeyCode.Mouse1;
     [SerializeField] private KeyCode _shootKey = KeyCode.Mouse0;
 
-
     private void Awake() => Init();
     private void OnEnable() => SubscribeEvents();
     private void Update() => HandlePlayerControl();
     private void OnDisable() => UnsubscribeEvents();
 
-    /// <summary>
-    /// ÃÊ±âÈ­¿ë ÇÔ¼ö, °´Ã¼ »ı¼º½Ã ÇÊ¿äÇÑ ÃÊ±âÈ­ ÀÛ¾÷ÀÌ ÀÖ´Ù¸é ¿©±â¼­ ¼öÇàÇÑ´Ù.
-    /// </summary>
+
     private void Init()
     {
         _status = GetComponent<PlayerStatus>();
@@ -36,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandlePlayerControl()
     {
-        if (!IsControlActivate) return; 
+        if (!IsControlActivate) return;
 
         HandleMovement();
         HandleAiming();
@@ -72,9 +68,10 @@ public class PlayerController : MonoBehaviour
 
         _movement.SetAvatarRotation(avatarDir);
 
+        // Aim ìƒíƒœì¼ ë•Œë§Œ.
         if (_status.IsAiming.Value)
         {
-            Vector3 input = _movement.GetMoveDirection();
+            Vector3 input = _movement.GetInputDirection();
             _animator.SetFloat("X", input.x);
             _animator.SetFloat("Z", input.z);
         }
@@ -88,16 +85,20 @@ public class PlayerController : MonoBehaviour
     public void SubscribeEvents()
     {
         _status.IsMoving.Subscribe(SetMoveAnimation);
+
         _status.IsAiming.Subscribe(_aimCamera.gameObject.SetActive);
         _status.IsAiming.Subscribe(SetAimAnimation);
+
         _status.IsAttacking.Subscribe(SetAttackAnimation);
     }
 
     public void UnsubscribeEvents()
     {
         _status.IsMoving.Unsubscribe(SetMoveAnimation);
+
         _status.IsAiming.Unsubscribe(_aimCamera.gameObject.SetActive);
         _status.IsAiming.Unsubscribe(SetAimAnimation);
+        
         _status.IsAttacking.Unsubscribe(SetAttackAnimation);
     }
 

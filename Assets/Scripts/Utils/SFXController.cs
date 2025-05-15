@@ -17,7 +17,7 @@ public class SFXController : PooledObject
 
     private void Update()
     {
-        // ÇÑ ÇÁ·¹ÀÓÀÌ °»½ÅµÉ¶§±îÁöÀÇ ½Ã°£ = DeltaTime
+        // í•œ í”„ë ˆì„ì´ ê°±ì‹ ë ë•Œê¹Œì§€ì˜ ì‹œê°„ = DeltaTime
         _currentCount -= Time.deltaTime;
 
         if (_currentCount <= 0)
