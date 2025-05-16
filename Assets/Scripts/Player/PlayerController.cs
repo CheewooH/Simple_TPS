@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _aimCamera;
     [SerializeField] private Gun _gun;
     [SerializeField] private Animator _aimAnimator;
+    [SerializeField] private HpGuageUI _hpUI;
 
     [SerializeField] private KeyCode _aimKey = KeyCode.Mouse1;
     [SerializeField] private KeyCode _shootKey = KeyCode.Mouse0;
@@ -32,6 +33,9 @@ public class PlayerController : MonoBehaviour
         _movement = GetComponent<PlayerMovement>();
         _animator = GetComponent<Animator>();
         _aimImage = _aimAnimator.GetComponent<Image>();
+
+        _hpUI.SetImageFillAmount(1);
+        _status.CurrentHp.Value = _status.MaxHP;
     }
 
     private void HandlePlayerControl()
@@ -41,6 +45,15 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleAiming();
         HandleShooting();
+
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            _status.CurrentHp.Value--;
+        }
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            _status.CurrentHp.Value++;
+        }
     }
 
     private void HandleShooting()
@@ -88,6 +101,8 @@ public class PlayerController : MonoBehaviour
 
     public void SubscribeEvents()
     {
+        _status.CurrentHp.Subscribe(SetHpUIGuage);
+
         _status.IsMoving.Subscribe(SetMoveAnimation);
 
         _status.IsAiming.Subscribe(_aimCamera.gameObject.SetActive);
@@ -98,11 +113,13 @@ public class PlayerController : MonoBehaviour
 
     public void UnsubscribeEvents()
     {
+        _status.CurrentHp.Unsubscribe(SetHpUIGuage);
+
         _status.IsMoving.Unsubscribe(SetMoveAnimation);
 
         _status.IsAiming.Unsubscribe(_aimCamera.gameObject.SetActive);
         _status.IsAiming.Unsubscribe(SetAimAnimation);
-        
+
         _status.IsAttacking.Unsubscribe(SetAttackAnimation);
     }
 
@@ -114,6 +131,11 @@ public class PlayerController : MonoBehaviour
     }
     private void SetMoveAnimation(bool value) => _animator.SetBool("IsMove", value);
     private void SetAttackAnimation(bool value) => _animator.SetBool("IsAttack", value);
+    private void SetHpUIGuage(int currentHp)
+    {
+        float hp = currentHp / (float)_status.MaxHP;
+        _hpUI.SetImageFillAmount(hp);
+    }
 }
 
 
